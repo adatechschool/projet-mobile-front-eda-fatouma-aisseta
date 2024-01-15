@@ -18,6 +18,10 @@
 		26D630572B5146B300FC1A78 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D630562B5146B300FC1A78 /* ContentViewModel.swift */; };
 		26D630592B514A1600FC1A78 /* OpenAiService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D630582B514A1600FC1A78 /* OpenAiService.swift */; };
 		26D6305B2B51520400FC1A78 /* Constants .swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D6305A2B51520400FC1A78 /* Constants .swift */; };
+		FA9F96A72B553FB90046BB8F /* HomePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9F96A62B553FB90046BB8F /* HomePage.swift */; };
+		FA9F96A92B553FD80046BB8F /* CategorieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9F96A82B553FD80046BB8F /* CategorieView.swift */; };
+		FA9F96AB2B553FFA0046BB8F /* WaitingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9F96AA2B553FFA0046BB8F /* WaitingScreen.swift */; };
+		FA9F96AD2B55400C0046BB8F /* StoryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9F96AC2B55400C0046BB8F /* StoryScreen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +56,10 @@
 		26D630562B5146B300FC1A78 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 		26D630582B514A1600FC1A78 /* OpenAiService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAiService.swift; sourceTree = "<group>"; };
 		26D6305A2B51520400FC1A78 /* Constants .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Constants .swift"; sourceTree = "<group>"; };
+		FA9F96A62B553FB90046BB8F /* HomePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePage.swift; sourceTree = "<group>"; };
+		FA9F96A82B553FD80046BB8F /* CategorieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorieView.swift; sourceTree = "<group>"; };
+		FA9F96AA2B553FFA0046BB8F /* WaitingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitingScreen.swift; sourceTree = "<group>"; };
+		FA9F96AC2B55400C0046BB8F /* StoryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +114,10 @@
 				2677B20F2B4EE55800F0E6C5 /* Projet-Mobile-Info.plist */,
 				2677B1E32B4D5E9B00F0E6C5 /* Projet_MobileApp.swift */,
 				2677B1E52B4D5E9B00F0E6C5 /* ContentView.swift */,
+				FA9F96A62B553FB90046BB8F /* HomePage.swift */,
+				FA9F96A82B553FD80046BB8F /* CategorieView.swift */,
+				FA9F96AA2B553FFA0046BB8F /* WaitingScreen.swift */,
+				FA9F96AC2B55400C0046BB8F /* StoryScreen.swift */,
 				26D630562B5146B300FC1A78 /* ContentViewModel.swift */,
 				26D630582B514A1600FC1A78 /* OpenAiService.swift */,
 				26D6305A2B51520400FC1A78 /* Constants .swift */,
@@ -277,10 +289,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				26D630592B514A1600FC1A78 /* OpenAiService.swift in Sources */,
+				FA9F96AB2B553FFA0046BB8F /* WaitingScreen.swift in Sources */,
+				FA9F96A72B553FB90046BB8F /* HomePage.swift in Sources */,
 				26D630572B5146B300FC1A78 /* ContentViewModel.swift in Sources */,
 				2677B1E62B4D5E9B00F0E6C5 /* ContentView.swift in Sources */,
+				FA9F96AD2B55400C0046BB8F /* StoryScreen.swift in Sources */,
 				26D6305B2B51520400FC1A78 /* Constants .swift in Sources */,
 				2677B1E42B4D5E9B00F0E6C5 /* Projet_MobileApp.swift in Sources */,
+				FA9F96A92B553FD80046BB8F /* CategorieView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
