@@ -8,10 +8,11 @@
 import SwiftUI
 
 @main
-struct Projet_MobileApp: App {
+struct YourApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                
         }
     }
 }
