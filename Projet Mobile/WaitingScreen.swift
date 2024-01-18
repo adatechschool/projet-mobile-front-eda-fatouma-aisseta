@@ -9,10 +9,24 @@ import SwiftUI
 
 struct WaitingScreen: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack {
+            
+            Image("main")
+                .resizable()
+                .scaledToFill()
+                .edgesIgnoringSafeArea(.all)
+                .opacity(0.8)
+            
+            VStack {
+                ProgressView("Votre histoire se charge")
+                    .foregroundColor(.black)
+            }
+        }
     }
 }
 
-#Preview {
-    WaitingScreen()
+struct WaitingScreen_Previews: PreviewProvider {
+    static var previews: some View {
+        WaitingScreen()
+    }
 }
