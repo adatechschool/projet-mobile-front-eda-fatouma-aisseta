@@ -11,8 +11,8 @@ struct CategorieView: View {
     @State private var username: String = ""
     @State private var storyResume: String = ""
     @State private var storyLength: String = ""
+    @State private var generatedStory: String = ""
     @State private var isNextViewActive: Bool = false
-    @State private var generatedStory: OpenAIChatMessage? // Added for storing generated story
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
@@ -40,27 +40,7 @@ struct CategorieView: View {
                         }
 
                         Button(action: {
-                            guard !username.isEmpty, !storyResume.isEmpty, !storyLength.isEmpty else {
-                                // Gérer le cas où des champs sont vides
-                                return
-                            }
-                            
-                            // Appeler la fonction de génération de manière asynchrone dans une Task
-                            Task {
-                                do {
-                                    if let generatedStory = try await OpenAiService().generateStory(username: username, storyResume: storyResume, storyLength: storyLength) {
-                                        // Afficher l'histoire générée dans StoryScreen
-                                        self.isNextViewActive.toggle()
-                                        self.generatedStory = generatedStory.choices.first?.message
-                                    } else {
-                                        // Gérer le cas où la génération a échoué
-                                        print("Échec de la génération de l'histoire.")
-                                    }
-                                } catch {
-                                    // Gérer les erreurs liées à l'appel asynchrone
-                                    print("Erreur lors de la génération de l'histoire : \(error.localizedDescription)")
-                                }
-                            }
+                            generateStory()
                         }) {
                             Text("Finalise et découvre l'histoire")
                         }
@@ -78,7 +58,19 @@ struct CategorieView: View {
             }
         }
         .sheet(isPresented: $isNextViewActive) {
-            StoryScreen(message: generatedStory)
+            StoryScreen(story: $generatedStory)
+        }
+    }
+
+    private func generateStory() {
+        OpenAIManager.shared.generateStory(username: username, storyLength: storyLength, storyResume: storyResume) { result in
+            switch result {
+            case .success(let story):
+                generatedStory = story
+                isNextViewActive.toggle()
+            case .failure(let error):
+                print("Erreur de génération de l'histoire: \(error.localizedDescription)")
+            }
         }
     }
 }

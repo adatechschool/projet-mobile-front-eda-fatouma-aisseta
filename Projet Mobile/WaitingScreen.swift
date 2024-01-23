@@ -4,7 +4,7 @@
 //
 //  Created by Macbook Fatouma on 15/01/2024.
 //
-
+/*
 import SwiftUI
 
 struct WaitingScreen: View {
@@ -36,7 +36,7 @@ struct WaitingScreen: View {
             }
         }
         .sheet(isPresented: $showStoryScreen) {
-            StoryScreen()
+            StoryScreen(story: .constant("Ceci est une histoire générée"))
         }
     }
 }
@@ -46,3 +46,4 @@ struct WaitingScreen_Previews: PreviewProvider {
         WaitingScreen()
     }
 }
+*/

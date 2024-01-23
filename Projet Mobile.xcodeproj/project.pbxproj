@@ -16,6 +16,7 @@
 		26D630552B4FF64000FC1A78 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 26D630542B4FF64000FC1A78 /* Alamofire */; };
 		26D630592B514A1600FC1A78 /* OpenAiService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D630582B514A1600FC1A78 /* OpenAiService.swift */; };
 		26D6305B2B51520400FC1A78 /* Constants .swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D6305A2B51520400FC1A78 /* Constants .swift */; };
+		64C2295D2B5FFE9100F9459B /* OpenAIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C2295C2B5FFE9100F9459B /* OpenAIManager.swift */; };
 		FA2A6DDD2B567BF20059FE1F /* video copie.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = FA2A6DDC2B567BF20059FE1F /* video copie.mp4 */; };
 		FA2A6DDE2B567BF20059FE1F /* video copie.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = FA2A6DDC2B567BF20059FE1F /* video copie.mp4 */; };
 		FA2A6DDF2B567BF20059FE1F /* video copie.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = FA2A6DDC2B567BF20059FE1F /* video copie.mp4 */; };
@@ -68,6 +69,7 @@
 		2677B20F2B4EE55800F0E6C5 /* Projet-Mobile-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Projet-Mobile-Info.plist"; sourceTree = SOURCE_ROOT; };
 		26D630582B514A1600FC1A78 /* OpenAiService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAiService.swift; sourceTree = "<group>"; };
 		26D6305A2B51520400FC1A78 /* Constants .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Constants .swift"; sourceTree = "<group>"; };
+		64C2295C2B5FFE9100F9459B /* OpenAIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIManager.swift; sourceTree = "<group>"; };
 		FA2A6DDC2B567BF20059FE1F /* video copie.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "video copie.mp4"; sourceTree = "<group>"; };
 		FA2A6DE42B567F790059FE1F /* oiseau.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = oiseau.gif; sourceTree = "<group>"; };
 		FA2A6DF42B5685080059FE1F /* SwiftGif-master */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "SwiftGif-master"; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 				FAF10AC72B56D13500BCF153 /* horrorbird.gif */,
 				FAF10AC12B56CA9800BCF153 /* sound.mp3 */,
 				FAF10AC32B56CCE000BCF153 /* HorrorSound.mp3 */,
+				64C2295C2B5FFE9100F9459B /* OpenAIManager.swift */,
 				FA9F96AA2B553FFA0046BB8F /* WaitingScreen.swift */,
 				FA2A6DE42B567F790059FE1F /* oiseau.gif */,
 				FA2A6DF42B5685080059FE1F /* SwiftGif-master */,
@@ -331,6 +334,7 @@
 				FA9F96A72B553FB90046BB8F /* HomePage.swift in Sources */,
 				FA9F96AD2B55400C0046BB8F /* StoryScreen.swift in Sources */,
 				26D6305B2B51520400FC1A78 /* Constants .swift in Sources */,
+				64C2295D2B5FFE9100F9459B /* OpenAIManager.swift in Sources */,
 				2677B1E42B4D5E9B00F0E6C5 /* Projet_MobileApp.swift in Sources */,
 				FA9F96A92B553FD80046BB8F /* CategorieView.swift in Sources */,
 			);

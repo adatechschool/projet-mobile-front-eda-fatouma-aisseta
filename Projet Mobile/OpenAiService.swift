@@ -1,9 +1,10 @@
+/*
 import Foundation
 import Alamofire
 
 class OpenAiService {
     
-    private let endpointURL = "https://api.openai.com/v1/chat/completions"
+    //private let endpointURL = "https://api.openai.com/v1/chat/completions"
     
     func sendMessages(messages: [OpenAIChatMessage]) async throws -> OpenAIChatResponse {
         let openAIMessages = messages.map({ OpenAIChatMessage(role: $0.role, content: $0.content) })
@@ -58,3 +59,4 @@ struct OpenAIChatResponse: Decodable {
 struct OpenAIChatChoice: Decodable {
     let message: OpenAIChatMessage
 }
+*/

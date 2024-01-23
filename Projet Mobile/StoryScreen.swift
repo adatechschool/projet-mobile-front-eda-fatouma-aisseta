@@ -8,53 +8,37 @@
 import SwiftUI
 
 struct StoryScreen: View {
+    @Binding var story: String
     @Environment(\.presentationMode) var presentationMode
     @State private var isCategorieViewPresented = false
-    var message: OpenAIChatMessage?
     
     var body: some View {
         NavigationStack {
             VStack {
-                if let message = message {
-                    Text("Ton histoire")
-                        .font(.title)
-                        .foregroundColor(.white)
-                        .padding(.bottom, 10)
-                    
-                    Text(message.content)
-                        .foregroundColor(.white)
-                } else {
-                    Text("No response yet.")
-                        .foregroundColor(.white)
-                }
+                
+                Text(story)
+                    .foregroundColor(.black)
+                
+                
+                // Bouton nouvelle histoire qui renvoie vers CategorieView
+                
+                    .navigationBarItems(trailing:
+                                            Button(action: {
+                        self.isCategorieViewPresented.toggle()
+                    }) {
+                        Text("Nouvelle histoire")
+                    }
+                    )
             }
-            .padding(20)
-            .background(Color.black)
-            .cornerRadius(10)
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(Color.gray, lineWidth: 2)
-            )
-            .navigationTitle("Votre histoire")
-            
-            // Bouton nouvelle histoire qui renvoie vers CategorieView
-            
-            .navigationBarItems(trailing:
-                Button(action: {
-                    self.isCategorieViewPresented.toggle()
-                }) {
-                    Text("Nouvelle histoire")
-                }
-            )
-        }
-        .sheet(isPresented: $isCategorieViewPresented) {
-            CategorieView()
+            .sheet(isPresented: $isCategorieViewPresented) {
+                CategorieView()
+            }
         }
     }
-}
-
-struct StoryScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        StoryScreen()
+    
+    struct StoryScreen_Previews: PreviewProvider {
+        static var previews: some View {
+            StoryScreen(story: .constant("Ceci est une histoire générée"))
+        }
     }
 }
