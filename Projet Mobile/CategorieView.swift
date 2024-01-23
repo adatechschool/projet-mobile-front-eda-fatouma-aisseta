@@ -57,13 +57,19 @@ struct CategorieView: View {
                          //   .resizable()
                          //   .frame(width: 30, height: 30)
                     })
+                    .scrollContentBackground(.hidden)
+                    .background(Gradient(colors: [.black, .brown, .black]).opacity(0.8))
+                    .navigationTitle(Text("Personnalise ton histoire"))
                 }
             }
         }
+        
         .sheet(isPresented: $isNextViewActive) {
             WaitingScreen()
         }
+    
     }
+    
 }
 
 struct CategorieView_Previews: PreviewProvider {
