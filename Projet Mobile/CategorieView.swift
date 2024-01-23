@@ -11,10 +11,9 @@ struct CategorieView: View {
     @State private var username: String = ""
     @State private var storyResume: String = ""
     @State private var storyLength: String = ""
-    @State private var isNextViewActive: Bool = false //pour gérer la navigation
+    @State private var isNextViewActive: Bool = false
+    @State private var generatedStory: OpenAIChatMessage? // Added for storing generated story
     @Environment(\.presentationMode) var presentationMode
-    //pour dissoudre ou fermer une vue modale ou une vue présentée à l'aide de la navigation. Ensuite, elle appelle la méthode dismiss() pour fermer ou dissoudre la vue.
-
 
     var body: some View {
         ZStack {
@@ -41,21 +40,36 @@ struct CategorieView: View {
                         }
 
                         Button(action: {
-                            self.isNextViewActive.toggle()
+                            guard !username.isEmpty, !storyResume.isEmpty, !storyLength.isEmpty else {
+                                // Gérer le cas où des champs sont vides
+                                return
+                            }
+                            
+                            // Appeler la fonction de génération de manière asynchrone dans une Task
+                            Task {
+                                do {
+                                    if let generatedStory = try await OpenAiService().generateStory(username: username, storyResume: storyResume, storyLength: storyLength) {
+                                        // Afficher l'histoire générée dans StoryScreen
+                                        self.isNextViewActive.toggle()
+                                        self.generatedStory = generatedStory.choices.first?.message
+                                    } else {
+                                        // Gérer le cas où la génération a échoué
+                                        print("Échec de la génération de l'histoire.")
+                                    }
+                                } catch {
+                                    // Gérer les erreurs liées à l'appel asynchrone
+                                    print("Erreur lors de la génération de l'histoire : \(error.localizedDescription)")
+                                }
+                            }
                         }) {
                             Text("Finalise et découvre l'histoire")
                         }
                     }
                     .navigationTitle("Personnalise ton histoire")
-        
-
-                    // Ajouter un bouton personnalisé de retour en arrière
                     .navigationBarItems(leading: Button(action: {
                         self.presentationMode.wrappedValue.dismiss()
                     }) {
                         Image(systemName: "arrow.backward")
-                         //   .resizable()
-                         //   .frame(width: 30, height: 30)
                     })
                     .scrollContentBackground(.hidden)
                     .background(Gradient(colors: [.black, .brown, .black]).opacity(0.8))
@@ -63,13 +77,10 @@ struct CategorieView: View {
                 }
             }
         }
-        
         .sheet(isPresented: $isNextViewActive) {
-            WaitingScreen()
+            StoryScreen(message: generatedStory)
         }
-    
     }
-    
 }
 
 struct CategorieView_Previews: PreviewProvider {

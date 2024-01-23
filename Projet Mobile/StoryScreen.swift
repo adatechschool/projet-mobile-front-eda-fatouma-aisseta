@@ -10,7 +10,7 @@ import SwiftUI
 struct StoryScreen: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var isCategorieViewPresented = false
-    var message: Message?
+    var message: OpenAIChatMessage?
     
     var body: some View {
         NavigationStack {
