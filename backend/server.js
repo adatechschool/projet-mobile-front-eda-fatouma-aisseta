@@ -2,17 +2,27 @@ const express = require('express');
 const app = express();
 const port = 3000;
 const mysql = require('mysql');
-const jwt= require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const uuid = require('uuid');
+const userMiddleware = require('./midlwear');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 app.use(express.json());
 
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  res.status(500).json({ message: 'Internal Server Error' });
+});
+
+
 // Créez une connexion à la base de données
 const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'admin',
-  database: 'horrorStory',
-  password: 'admin',
-  port: 8889
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'admin',
+  database: process.env.DB_NAME || 'horrorStory',
+  password: process.env.DB_PASSWORD || 'admin',
+  port: process.env.DB_PORT || 8889
 });
 
 // Connectez-vous à la base de données
@@ -21,87 +31,133 @@ connection.connect((err) => {
     console.error('Erreur de connexion à la base de données : ' + err.stack);
     return;
   }
-
   console.log('Connecté à la base de données avec l\'ID ' + connection.threadId);
-
-  // Effectuez une requête
-  connection.query('SELECT * FROM USERS ', function(err, rows, fields) {
-    if (err) throw err;
-    console.log('La solution est : ', rows[0].email);
-  });
 });
 
 // API pour l'enregistrement d'un utilisateur
-app.post('/register', async (req, res) => {
+app.post('/register', userMiddleware.validateRegister, async (req, res) => {
   try {
-    const { email, password } = req.body;
+    connection.query(
+      'SELECT id FROM users WHERE LOWER(email) = LOWER(?)',
+      [req.body.email],
+      (err, result) => {
+        if (err) {
+          return res.status(500).send({
+            message: err,
+          });
+        }
 
-    // Validation des données d'entrée
-    if (!email || !password) {
-      return res.status(400).json({ message: "Veuillez fournir des informations correctes" });
-    }
+        if (result && result.length) {
+          // Email déjà enregistré
+          return res.status(409).send({
+            message: 'This email is already in use!',
+          });
+        } else {
+          // Email disponible, procéder à l'insertion
+          bcrypt.hash(req.body.password, 10, (err, hash) => {
+            if (err) {
+              return res.status(500).send({
+                message: err,
+              });
+            }
 
-    if (password.length < 5) {
-      return res.status(400).json({ message: "Le mot de passe doit contenir au moins 5 caractères" });
-    }
-      // Logique pour enregistrer l'utilisateur dans la base de données
+            const currentDate = new Date();
 
-    connection.query('INSERT INTO USERS (email, password) VALUES (?, ?)', [email, password], function(err, result) {
-      if (err) {
-        console.error('Erreur lors de l\'insertion de l\'utilisateur :', err);
-        return res.status(500).json({ message: "Erreur lors de l'insertion de l'utilisateur" });
+            connection.query(
+              'INSERT INTO users (email, password) VALUES (?, ?)',
+              [req.body.email, hash],
+              (err, result) => {
+                if (err) {
+                  return res.status(400).send({
+                    message: err,
+                  });
+                }
+
+                return res.status(201).send({
+                  message: 'Registered!',
+                });
+              }
+            );
+          });
+        }
       }
-
-     
-
-      // Réponse réussie
-      res.status(200).json({ message: "Utilisateur enregistré avec succès" });
-    });
-
+    );
   } catch (error) {
     console.error('Erreur lors de la création de l\'utilisateur :', error);
     res.status(500).json({ message: "Erreur lors de la création de l'utilisateur" });
   }
 });
 
-// API pour la connexion d'un utilisateur
-app.post('/connexion', (req, res) => {
-  try {
-    const { email, password } = req.body;
+//API pour la connexion d'un utilisateur et une fois qu'il comparle le mdp hashé il creer un token pour la connexion
+app.post('/login', async (req, res) => {
+  connection.query(
+    `SELECT * FROM USERS WHERE email= ?;`,
+    [req.body.email],
+    (err, result) => {
+      if (err) {
+        return res.status(400).send({
+          message: err,
+        });
+      }
+      if (!result.length) {
+        return res.status(400).send({
+          message: 'Username or password incorrect!',
+        });
+      }
 
-    // Validation des données d'entrée
-    if (!email || !password) {
-      return res.status(400).json({ message: "Veuillez fournir des informations correctes" });
+      bcrypt.compare(
+        req.body.password,
+        result[0]['password'],
+        (bErr, bResult) => {
+          if (bErr) {
+            return res.status(400).send({
+              message: 'email or password incorrect!',
+            });
+          }
+          if (bResult) {
+            // password match
+            const token = jwt.sign(
+              {
+                userId: result[0].id,
+              },
+              'secret_key',
+              { expiresIn: '7d' }
+            );
+            console.log('Generated Token:', token);
+
+            connection.query(`UPDATE users SET last_login = now() WHERE id = ?;`, [
+              result[0].id,
+            ]);
+
+            // Maintenant, utilisez le token dans la réponse
+            return res.status(200).send({
+              message: 'Logged in!',
+              token,
+              user: result[0],
+            });
+          }
+          return res.status(400).send({
+            message: 'email or password incorrect!',
+          });
+        }
+      );
     }
-
-    // Logique pour l'authentification de l'utilisateur
-    // ...
-
-    // Réponse réussie
-    res.status(200).json({ message: "Connexion réussie" });
-  } catch (error) {
-    console.error("General error:", error);
-    return res.status(500).json({ message: "Erreur du serveur" });
-  }
+  );
 });
+
 
 // API pour récupérer les histoires associées à un utilisateur
 app.get('/api/histoires/:id', (req, res) => {
   const userId = req.params.id;
-  sql.connect(sqlConfig, function() {
-    const request = new sql.Request();
-    request.query('select * from STORY', function(err, recordset) {
-        if(err) console.log(err);
-        res.end(JSON.stringify(recordset)); // Result in JSON format
-    });
-});
-
-
-  // Logique pour récupérer les histoires associées à l'utilisateur avec l'ID userId
-  // ...
-
-  // Réponse réussie
-  res.status(200).json({ message: "Histoires récupérées avec succès" });
+  // Utilisez connection.query ici pour exécuter une requête SQL en utilisant la connexion MySQL
+  connection.query('SELECT * FROM horroStory', function (err, recordset) {
+    if (err) {
+      console.log(err);
+      res.status(500).json({ message: "Erreur lors de la récupération des histoires" });
+    } else {
+      res.status(200).json({ message: "Histoires récupérées avec succès", data: recordset });
+    }
+  });
 });
 
 app.listen(port, () => {
