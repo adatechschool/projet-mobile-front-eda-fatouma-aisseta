@@ -5,15 +5,25 @@
 //  Created by Macbook Fatouma on 15/01/2024.
 //
 
+//
+//  CategorieView.swift
+//  Projet Mobile
+//
+//  Created by Macbook Fatouma on 15/01/2024.
+//
+
 import SwiftUI
+
 
 struct CategorieView: View {
     @State private var username: String = ""
     @State private var storyResume: String = ""
     @State private var storyLength: String = ""
+    @State private var selectedGenre: String = "Peur" // Nouveau paramètre de genre
     @State private var generatedStory: String = ""
     @State private var isNextViewActive: Bool = false
     @Environment(\.presentationMode) var presentationMode
+    
 
     var body: some View {
         ZStack {
@@ -31,11 +41,20 @@ struct CategorieView: View {
                             .pickerStyle(SegmentedPickerStyle())
                         }
 
-                        Section("Choisir ton où tes personnages") {
+                        Section(header: Text("Choisir le genre")) {
+                            Picker("Choisissez le genre", selection: $selectedGenre) {
+                                Text("Peur").tag("Peur")
+                                Text("Intrigue").tag("Intrigue")
+                                // Ajoutez d'autres genres selon vos besoins
+                            }
+                            .pickerStyle(SegmentedPickerStyle())
+                        }
+
+                        Section(header: Text("Choisir ton où tes personnages")) {
                             TextField("Username", text: $username)
                         }
 
-                        Section("RÉSUMÉ DE L'HISTOIRE") {
+                        Section(header: Text("RÉSUMÉ DE L'HISTOIRE")) {
                             TextField("Ecrire ici...", text: $storyResume)
                         }
 
@@ -62,12 +81,15 @@ struct CategorieView: View {
         }
     }
 
+   
     private func generateStory() {
-        OpenAIManager.shared.generateStory(username: username, storyLength: storyLength, storyResume: storyResume) { result in
+        OpenAIManager.shared.generateStory(username: username, storyLength: storyLength, storyResume: storyResume, genre: selectedGenre) { result in
             switch result {
             case .success(let story):
-                generatedStory = story
-                isNextViewActive.toggle()
+                DispatchQueue.main.async {
+                    generatedStory = story
+                    isNextViewActive.toggle()
+                }
             case .failure(let error):
                 print("Erreur de génération de l'histoire: \(error.localizedDescription)")
             }

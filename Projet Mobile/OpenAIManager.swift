@@ -5,7 +5,6 @@
 //  Created by OZDEMIR Eda on 23/01/2024.
 //
 
-
 import Foundation
 
 class OpenAIManager {
@@ -17,28 +16,24 @@ class OpenAIManager {
         self.openaiApiKey = Constants.OpenAIApiKey
     }
 
-    func generateStory(username: String, storyLength: String, storyResume: String, completion: @escaping (Result<String, Error>) -> Void) {
-        
-        //requete HTTP
+    func generateStory(username: String, storyLength: String, storyResume: String, genre: String, completion: @escaping (Result<String, Error>) -> Void) {
         guard let url = URL(string: "https://api.openai.com/v1/chat/completions") else {
             completion(.failure(NSError(domain: "Invalid API URL", code: 0, userInfo: nil)))
             return
         }
 
-        //Corps de la requete
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("Bearer \(openaiApiKey)", forHTTPHeaderField: "Authorization")
-       request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
 
         let requestBody: [String: Any] = [
             "model": "gpt-3.5-turbo",
             "messages": [
-                ["role": "system", "content": "You are an author who writes horror stories, you write your stories in french."],
-                ["role": "user", "content": "\(username) is a character in a \(storyLength.lowercased()) story. The story is about \(storyResume)"]
+                ["role": "system", "content": "You are an author who writes \(genre.lowercased()) scary bedtimes stories, you write your stories in french. "],
+                ["role": "user", "content": "\(username) is a character in a \(storyLength.lowercased()) story. The story is about \(storyResume) and follow the chosen \(genre)"]
             ],
-            "max_tokens": 500,
-          // "stop": ["\n"] //pour pas que ca coupe au milieu d'une phrase
+            "max_tokens": 500
         ]
 
         do {
@@ -48,8 +43,6 @@ class OpenAIManager {
             return
         }
 
-        
-        //envoie de la requete HTTP, On utilise URLSession pour envoyer la requête asynchrone et traiter la réponse.
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 print("Error: \(error.localizedDescription)")
@@ -63,14 +56,10 @@ class OpenAIManager {
                 return
             }
 
-            
-            //traitement de la réponse conversion json -> dictionnaire swift
             do {
                 let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
                 print("JSON Response: \(json ?? [:])")
-                
-                //gestion des erreurs
-                //"choices" est la clé utilisée pour récupérer les différentes options de complétion générées par le modèle GPT-3 dans la réponse de l'API
+
                 if let choices = json?["choices"] as? [[String: Any]], let message = choices.first?["message"] as? [String: Any], let content = message["content"] as? String {
                     print("Generated Story: \(content)")
                     completion(.success(content))
@@ -86,6 +75,4 @@ class OpenAIManager {
 
         task.resume()
     }
-
-
 }
