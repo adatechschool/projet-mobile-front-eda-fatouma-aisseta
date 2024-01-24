@@ -5,16 +5,25 @@
 //  Created by Macbook Fatouma on 15/01/2024.
 //
 
+//
+//  CategorieView.swift
+//  Projet Mobile
+//
+//  Created by Macbook Fatouma on 15/01/2024.
+//
+
 import SwiftUI
+
 
 struct CategorieView: View {
     @State private var username: String = ""
     @State private var storyResume: String = ""
     @State private var storyLength: String = ""
-    @State private var isNextViewActive: Bool = false //pour gérer la navigation
+    @State private var selectedGenre: String = "Peur" // Nouveau paramètre de genre
+    @State private var generatedStory: String = ""
+    @State private var isNextViewActive: Bool = false
     @Environment(\.presentationMode) var presentationMode
-    //pour dissoudre ou fermer une vue modale ou une vue présentée à l'aide de la navigation. Ensuite, elle appelle la méthode dismiss() pour fermer ou dissoudre la vue.
-
+    
 
     var body: some View {
         ZStack {
@@ -32,30 +41,34 @@ struct CategorieView: View {
                             .pickerStyle(SegmentedPickerStyle())
                         }
 
-                        Section("Choisir ton où tes personnages") {
+                        Section(header: Text("Choisir le genre")) {
+                            Picker("Choisissez le genre", selection: $selectedGenre) {
+                                Text("Peur").tag("Peur")
+                                Text("Intrigue").tag("Intrigue")
+                                // Ajoutez d'autres genres selon vos besoins
+                            }
+                            .pickerStyle(SegmentedPickerStyle())
+                        }
+
+                        Section(header: Text("Choisir ton où tes personnages")) {
                             TextField("Username", text: $username)
                         }
 
-                        Section("RÉSUMÉ DE L'HISTOIRE") {
+                        Section(header: Text("RÉSUMÉ DE L'HISTOIRE")) {
                             TextField("Ecrire ici...", text: $storyResume)
                         }
 
                         Button(action: {
-                            self.isNextViewActive.toggle()
+                            generateStory()
                         }) {
                             Text("Finalise et découvre l'histoire")
                         }
                     }
                     .navigationTitle("Personnalise ton histoire")
-        
-
-                    // Ajouter un bouton personnalisé de retour en arrière
                     .navigationBarItems(leading: Button(action: {
                         self.presentationMode.wrappedValue.dismiss()
                     }) {
                         Image(systemName: "arrow.backward")
-                         //   .resizable()
-                         //   .frame(width: 30, height: 30)
                     })
                     .scrollContentBackground(.hidden)
                     .background(Gradient(colors: [.black, .brown, .black]).opacity(0.8))
@@ -63,13 +76,25 @@ struct CategorieView: View {
                 }
             }
         }
-        
         .sheet(isPresented: $isNextViewActive) {
-            WaitingScreen()
+            StoryScreen(story: $generatedStory)
         }
-    
     }
-    
+
+   
+    private func generateStory() {
+        OpenAIManager.shared.generateStory(username: username, storyLength: storyLength, storyResume: storyResume, genre: selectedGenre) { result in
+            switch result {
+            case .success(let story):
+                DispatchQueue.main.async {
+                    generatedStory = story
+                    isNextViewActive.toggle()
+                }
+            case .failure(let error):
+                print("Erreur de génération de l'histoire: \(error.localizedDescription)")
+            }
+        }
+    }
 }
 
 struct CategorieView_Previews: PreviewProvider {
