@@ -2,7 +2,7 @@
 //  PageUser.swift
 //  Projet Mobile
 //
-//  Created by Macbook Fatouma on 23/01/2024.
+//  Created by OZDEMIR Eda on 24/01/2024.
 //
 
 import SwiftUI
@@ -123,4 +123,3 @@ struct PageUser_Previews: PreviewProvider {
         PageUser()
     }
 }
-
